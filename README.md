@@ -33,6 +33,8 @@
         a.Create 10 items in item table using postman using below url and body in json;
             POST: http://localhost:8991/item        (for save/update)
             with body like below:
+            
+            
             {
             	"id":1,
             	"name":"pencil",
@@ -47,6 +49,10 @@
             using these itemId we are going to order items;
     4. one can delete the item using DELETE:-http://localhost:8991/item?id=2    here id is itemid
     
+    
+    
+    
+    
     Placing the Order 
     
     single/bulk order by customer
@@ -55,6 +61,8 @@
     A customer can order single or multiple item or more then one quantity of single item changing the payload
     
     
+      
+      
       
      payload for single item be like :-
      
@@ -69,6 +77,8 @@
      	],
      	"emailId":"vikram19977@gmail.com"
      }
+     
+     
      payload for more than one quantity of single item
           {
           	"orderId":1,
@@ -81,8 +91,11 @@
           	],
           	"emailId":"vikram19977@gmail.com"
           }
+         
+         
           
       payload for more then one item 
+     
        {
             "orderId":1,
             "orderedItems":[ 
@@ -100,13 +113,19 @@
             "emailId":"testuser@gmail.com"
         }  
         
+        
        i. If we have happy path means order is placed  then we will get the message like ::
         'sample output'-  "Order Placed...!  you have spent :"+xxxx +" Rupees";  xxxx=calculated total spent amount;
        
+       
+       
        ii. for any of the exception like out of stock item we have various messages coming to the customer accordinglg
+      
+      
       
       It is already tested by various component test cases written in test folder 
       for both ItemController and OrderController;
+      
       
       
       6.GET:localhost:8991/order -> for listing all orders placed by all the customers
@@ -194,7 +213,7 @@
           }
       ]
        
-     8.In TestCases I have used Junit5 conects as well with the 87% of testcase coverage;
+     8.In TestCases used Junit5 concepts as well with the 87% of testcase coverage;
      
      
        
