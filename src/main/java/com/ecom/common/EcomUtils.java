@@ -1,5 +1,8 @@
 package com.ecom.common;
 
+/**
+ * Utility class
+ */
 public interface EcomUtils {
     String ERROR_IN_DB="Some error in DB could not process your order";
     String SUCCESS_MESSAGE = "Order Placed...!  you have spent :";

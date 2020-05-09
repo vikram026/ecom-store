@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * ORDER DETAILS HAS EACH ITEM RELATED INFO
+ */
 @Data
 @NoArgsConstructor
 @Entity

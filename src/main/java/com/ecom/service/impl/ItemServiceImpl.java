@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Item related service Basic CRUD OPERATION
+ */
 @Service
 @Slf4j
 public class ItemServiceImpl  implements ItemService {
