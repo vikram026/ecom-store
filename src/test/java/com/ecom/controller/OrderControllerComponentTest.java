@@ -9,6 +9,7 @@ import com.ecom.repository.ItemRepository;
 import com.ecom.repository.OrderRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class OrderControllerComponentTest {
 
@@ -70,6 +73,24 @@ public class OrderControllerComponentTest {
 
         when(orderRepository.save(ArgumentMatchers.any(Orders.class))).thenReturn(orders);
         when(itemRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(ItemControllerComponentTest.mockItem()));
+
+        when(itemRepository.save(ArgumentMatchers.any(Item.class))).thenReturn(null);
+
+        ResponseEntity<String> responseEntity =  orderController.orderItems(orders);
+        assertAll( "orderItemsTest",
+                ()-> assertEquals(responseEntity.getStatusCode(), HttpStatus.NOT_ACCEPTABLE,()->"status should be 200")
+                ,()->assertEquals(responseEntity.getBody(),outOfStockRespone,()->" messages should match")
+        );
+    }
+
+    @DisplayName("This method will test the orderItems method for Out of Stock If Item is Not Available, it will mock db ")
+    @ParameterizedTest
+    @MethodSource("getOrdersOutOfStockAsItemNotFoundSource")
+    public void orderItemsOutOfStockIfItemNotAvailableTest(Orders orders){
+
+        String outOfStockRespone="Item with id "+orders.getOrderedItems().get(0).getItemId()+" not available please visit after some time.";
+        when(orderRepository.save(ArgumentMatchers.any(Orders.class))).thenReturn(orders);
+        when(itemRepository.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.ofNullable(null));
 
         when(itemRepository.save(ArgumentMatchers.any(Item.class))).thenReturn(null);
 
@@ -139,6 +160,10 @@ public class OrderControllerComponentTest {
 
         return Stream.of(Arguments.of(mockOutOfStockOrders()));
     }
+    private static Stream<Arguments> getOrdersOutOfStockAsItemNotFoundSource(){
+
+        return Stream.of(Arguments.of(mockOutOfStockOrdersAsItemNotFound()));
+    }
 
     private static Stream<Arguments> getOrdersSource(){
         return Stream.of(Arguments.of(mockOrders()));
@@ -160,6 +185,16 @@ public class OrderControllerComponentTest {
         orders.setEmailId("someemail");
         OrderedItems orderedItems=new OrderedItems();
         orderedItems.setItemId(1);
+        orderedItems.setQty(2);
+        orders.setOrderedItems(Arrays.asList(orderedItems));
+        return orders;
+    }
+    public static Orders mockOutOfStockOrdersAsItemNotFound() {
+        Orders orders=new Orders();
+        orders.setOrderId(1);
+        orders.setEmailId("someemail");
+        OrderedItems orderedItems=new OrderedItems();
+        orderedItems.setItemId(2);
         orderedItems.setQty(2);
         orders.setOrderedItems(Arrays.asList(orderedItems));
         return orders;

@@ -96,12 +96,14 @@ public class OrderServiceImpl implements OrderService {
                     itemService.save(item);
                 }
                 else if(e.getQty()==0){
-                    response=EcomUtils.ITEMS_QUANTITY_SHOULD_NOT_BE_ZERO;
+                    response=EcomUtils.ITEMS_QUANTITY_SHOULD_NOT_BE_ZERO+" for item id "+e.getItemId()+" or remove that item from the cart/json";
+                    outOfStock=true;
+                    break;
                 }
                 else{
 
                      response=item.getQty()>0?"item "+item.getName()+" with id="+e.getItemId()+" is the first item we found out of stock for your purchase You can purchase only "+item.getQty()+" "+item.getName()
-                             :"Item " +item.getName()+"with id="+e.getItemId()+" is out of Stock please visit after some time.";
+                             :"Item " +item.getName()+" with id="+e.getItemId()+" is out of Stock please visit after some time.";
                      outOfStock=true;
                      break;
                 }
